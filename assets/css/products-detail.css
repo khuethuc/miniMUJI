@@ -1,0 +1,113 @@
+/* Container for the product details */
+.product-details {
+    display: flex;
+    justify-content: space-between;
+    margin: 10vh 30vh;
+    box-shadow: 0 0 15px rgba(226, 225, 225, 0.5);
+}
+
+/* Left Column (Image) */
+.product-left {
+    flex: 0.5;
+    margin: 30px 30px;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+}
+
+.product-left .product-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Right Column (Information) */
+.product-right {
+    flex: 0.5;
+    margin: 30px 30px 30px 0;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+}
+
+.product-right .product-name {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.product-right .product-price {
+    font-size: 18px;
+    color: #7F0019;
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.product-right .short-info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+}
+
+.product-right p{
+    line-height: 1.5;
+}
+
+/* Buttons */
+.product-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.product-buttons .add-to-cart,
+.product-buttons .buy-now {
+    padding: 10px 20px;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.product-buttons .add-to-cart {
+    background-color: #7F0019;
+    color: white;
+}
+
+.product-buttons .add-to-cart:hover {
+    background-color: #B03A3A;
+}
+
+.product-buttons .buy-now {
+    background-color: white;
+    color: #7F0019;
+    border: solid #7F0019;
+}
+
+.product-buttons .buy-now:hover {
+    background-color: rgb(229, 227, 227);
+}
+
+/* * * Quantity box * * */
+
+.quantity-container {
+    margin: 10px 0;
+}
+
+.quantity-container label {
+    font-size: 15px;
+}
+
+.quantity-container .quantity-input {
+    width: 60px;
+    height: 30px;
+    font-size: 15px;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: 'Quicksand', sans-serif;
+}

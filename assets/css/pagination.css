@@ -1,0 +1,32 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    gap: 6px;
+}
+
+.pagination .pgn-button {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-weight: 500;
+    background: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.pagination .pgn-button:hover {
+    background-color: #f2f2f2;
+}
+
+.pagination button.active {
+    background-color: black;
+    color: white;
+}
+
+.pagination button.active:hover {
+    background-color: black;
+    color: white;
+}

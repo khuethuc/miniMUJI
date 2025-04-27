@@ -1,0 +1,297 @@
+/* * * Form * * */
+.form {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    margin: 10vh auto;   
+    background-color: #fff; 
+    border: solid rgb(229, 227, 227);
+    box-shadow: 0 0 15px rgba(226, 225, 225, 0.5);
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+.form a.text-black {
+    color: black !important;
+    text-decoration: underline;
+}
+
+.form a.text-black:hover {
+    color: black;
+}
+
+.form label,
+.form input,
+.form button,
+.form div {
+    display: block;
+    width: 100%;
+    margin: 15px 0px;
+}
+
+.form h1 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* * * Form group * * */
+.form-group {
+    margin: 15px 0px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[type="password"]{
+    height: 40px;
+    border-radius: 8px;
+    border: 1.5px solid #000;
+    padding: 0 10px;
+} 
+
+.form-group input[type="checkbox"] {
+    height: 20px;
+    width: 20px;
+    border: 2px solid #000 !important;
+    cursor: pointer;
+} 
+
+.form-group button.btn-dark {
+    max-width: 250px;
+    min-width: 100px;
+    width: 50%;
+    border-radius: 8px;
+    font-weight: bold;
+    margin: 0 auto;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.form-group button.btn-light {
+    border: 2px solid #000;
+    max-width: 250px;
+    min-width: 100px;
+    width: 50%;
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.form-group input[type = "submit"]{
+    border: 2px solid #000;
+    max-width: 250px;
+    min-width: 100px;
+    width: 50%;
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 10px;
+    margin: 5px auto;
+}
+
+.form-group.submit {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.upload-box {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    position: relative;
+    cursor: pointer;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.upload-box span {
+    color: #666;
+}
+
+.filter-select {
+    padding: 5px 15px !important;
+    font-weight: 500;
+    border-radius: 6px;
+    border: 2px solid #000 !important;
+    background-color: #fff; 
+    outline: none;
+    width: 200px;
+    height: 40px;
+}
+
+.file-info {
+    display: none;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.file-actions .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.download-btn {
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px !important;
+}
+
+.login-type {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-direction: row !important;
+    text-align: center;
+}
+
+.login-type .login-btn {
+    display: inline;
+    background: none;
+    border: none;
+    font-weight: normal;
+    cursor: pointer;
+    font-size: 15px;
+    width: 30%;
+}
+
+.login-type .login-btn.active {
+    font-weight: bold;
+}
+
+.login-type .x {
+    display: inline;
+    margin: 0 10px;
+    font-weight: bold;
+    color: #333;
+}
+  
+
+.login-type .x::after {
+    display: none;
+}
+.login-type .x::before {
+    display: none;
+}
+  
+
+.form-group textarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+.form-group.setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-group.setting div {
+    width: 33%;
+}
+
+.form-group.setting label {
+    margin-top: 0;
+}
+
+.form-group textarea:focus {
+    border: 2px solid #000;
+}
+
+.form-group select {
+    height: 40px;
+    border-radius: 8px;
+    width: 80%;
+    border: 1px solid #000;
+    padding: 0px 10px;
+}
+
+.form-group input[type='date'] {
+    width: 80%;
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #000;
+    padding: 0px 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    .form {
+        width: 100%;
+        padding: 50px 30px;  
+        background-color: #fff;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="tel"] {
+        height: 40px;
+        margin-right: 0;
+        border-radius: 8px;
+        border: 1.5px solid #000;
+        padding: 0 10px;
+    } 
+}
+
+@media (max-width: 400px) {
+    .form-group.setting {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }    
+    .form-group.setting div {
+        width: 100%;
+    }
+    .form-group select {
+        height: 40px;
+        border-radius: 8px;
+        width: 100%;
+    }
+    .form-group input[type='date'] {
+        width: 100%;
+    }
+
+    .degree_select {
+        flex-direction: column;
+        gap: 5px
+    }
+    .degree_select input {
+        margin: 0px;
+    }
+}

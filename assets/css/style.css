@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* Body */
+body, html {
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    font-size: 15px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    align-items: center;
+    min-height: 15vh;
+    background-color: #7F0019;
+    width: 100%;
+    z-index: 1;
+}
+
+.left-header {
+    display: flex;
+    align-items: center;
+}
+
+.mid-header {
+    display: flex;
+    justify-content: center;
+}
+
+.right-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Logo */
+.logo {
+    margin-left: 3%;
+    margin-right: 5%;
+    position: relative;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
+
+.logo a {
+    text-decoration: none;
+    color: white;
+}
+
+/* Navigation */
+nav ul {
+    list-style: none;     
+    margin: auto 3px;            
+}
+
+nav ul li {
+    display: inline-block;
+    margin: auto 3px;
+}
+
+nav ul li a {           
+    text-decoration: none; 
+    margin: 0 6px;  
+    display: block;         
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: white;            
+    margin: 0 6px;  
+    display: block;           
+    font-size: 15px;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* Search bar */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0 5px;
+}
+
+.search-container .search-input {
+    padding: 6px;
+    font-size: 15px;
+    border-radius: 5px;
+    border: none;
+    width: 450px;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.search-container .search-button {
+    padding: 6px 10px;
+    background-color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: auto 8px;
+}
+
+/* Icon */
+.icons {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 0%;
+    margin-right: 8%; 
+    justify-content: right;
+}
+
+.icons button{
+    background-color: transparent;
+    border: transparent;
+}
+
+.icons .icon-link {
+    margin: 0 18px;
+    display: flex;
+    align-items: center;
+}
+
+/* Button */
+.button {
+    padding-right: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+.white-button,
+.red-button {
+    padding: 10px 20px;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+.red-button {
+    background-color: #7F0019;
+    color: white;
+    border: solid white;
+}
+
+.red-button:hover {
+    background-color: #B03A3A;
+}
+
+.white-button {
+    background-color: white;
+    color: #7F0019;
+    border: solid #7F0019;
+}
+
+.white-button:hover {
+    background-color: #B03A3A;
+}
+
+/* Account Menu */
+.account-menu {
+    display: none; /* Ẩn menu theo mặc định */
+    position: absolute;
+    top: 120%;
+    background-color: #fff;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0 10px;
+    width: 150px;
+}
+
+.account-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.account-menu ul li {
+    margin: 5px 0;
+    padding: 10px 0;
+}
+
+.account-menu ul li button{
+    width: 100%;
+    background-color: white;
+    border: transparent;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 15px;
+}
+
+.account-menu ul li .logout-button{
+    width: 100%;
+    color: #7F0019;
+    border: transparent;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+
+/* Footer */
+.footer {
+    background-color: #7F0019;
+    color: white;
+    padding: 40px 60px;
+    font-family: 'Quicksand', sans-serif;
+    margin-top: 80px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.footer-column h1 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.footer-column h4 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.footer-column p,
+.footer-column ul li {
+    font-size: 15px;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+

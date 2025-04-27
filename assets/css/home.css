@@ -1,0 +1,124 @@
+body, html {
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    font-size: 15px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Background image */
+
+.background {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    justify-content: center;
+}
+
+.background-image {
+    margin: -37vh 0 0 0;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    justify-content: center;
+}
+
+/* Product display */
+
+.products {
+    margin: 0vh 15vh;
+    padding-top: 60px;
+}
+
+.products .product-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.products .product-container .box-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cột cho các sản phẩm */
+    gap: 30px;
+    width: 90%;
+}
+
+.products .product-container .box-container .box {
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: solid #dcdbdb;
+}
+
+.products .box-container .box .image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.products .box-container .box .name {
+    font-size: 15px;
+    height: 2.6rem;
+    color: black;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.products .box-container .box .price {
+    font-size: 15px;
+    font-weight: bold;
+    color: #7F0019;
+    margin-top: 5px;
+}
+
+.products .box-container .box .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #7F0019;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.products .box-container .box .btn-white {
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+    color: #7F0019;
+    border: solid #7F0019;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.products .box-container .box:hover {
+    border: solid #7F0019;
+}
+
+.products .box-container .box button{
+    border: none;
+    background-color: white;
+}
+
