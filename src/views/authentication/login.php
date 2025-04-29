@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['fullname'] = $user['fullname'];
                 if ($user['role'] === 'user') {
-                    echo "<script>window.location.href='?page=home';</script>";
+                    echo "<script>window.location.href='/minimuji/home';</script>";
                 }
                 else{
-                    echo "<script>window.location.href='?page=dashboard';</script>";
+                    echo "<script>window.location.href='/minimuji/dashboard';</script>";
                 }
                 exit;
             } 
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class = 'form'>
             <h1>Login</h1>
 
-            <p>Don't have an account? <a href="?page=register" class = "text-decoration-underline text-black">Register</a></p>
+            <p>Don't have an account? <a href="/minimuji/register" class = "text-decoration-underline text-black">Register</a></p>
             
             <form action = "#" method = "POST" id = "form">
                 <!-- Email -->

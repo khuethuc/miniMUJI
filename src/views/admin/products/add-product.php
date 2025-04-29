@@ -6,68 +6,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantity = (int)$_POST['quantity'];
     $category = $_POST['category'];
 
+    // Get category id
     $query = $conn->query("SELECT id FROM CATEGORY WHERE name = '$category'");
     $category_id = (int)$query->fetch_assoc()['id'];
 
-    $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/mini_muji/assets/images/products/';
+    // Process image
+    $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/minimuji/assets/images/products/';
 
     $original_name = null;
 
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0777, true);
     }
-    // print_r($upload_dir);
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        // Lấy thông tin tệp
         $tmp_name = $_FILES['image']['tmp_name'];
         $original_name = $_FILES['image']['name'];
         $size = $_FILES['image']['size'];
         $error = $_FILES['image']['error'];
 
-        // Kiểm tra lỗi khi tải lên
         if ($error !== UPLOAD_ERR_OK) {
             error_log("Upload failed for $original_name with error code: $error");
-            echo "<script>alert('Error uploading the file.');";
+            header('Content-Type: application/json');
+            echo json_encode(["status" => "error", "message" => "Error uploading the file."]);
+            exit;
         }
 
-        // Kiểm tra kích thước tệp (dưới 10MB)
         if ($size > 10 * 1024 * 1024) {
             error_log("File $original_name is too large.");
-            echo "<script>alert('File is too large. Maximum size is 10MB.');";
+            header('Content-Type: application/json');
+            echo json_encode(["status" => "error", "message" => "File is too large. Maximum size is 10MB."]);
+            exit;
         }
 
-        // Kiểm tra định dạng tệp (chỉ cho phép .jpg hoặc .png)
         $allowed_types = ['image/jpeg', 'image/png'];
         $file_type = mime_content_type($tmp_name);
 
         if (!in_array($file_type, $allowed_types)) {
-            echo "<script>alert('Invalid file type. Only JPG and PNG files are allowed.');";
+            header('Content-Type: application/json');
+            echo json_encode(["status" => "error", "message" => "Invalid file type. Only JPG and PNG files are allowed."]);
+            exit;
         }
 
-        // Tạo tên tệp duy nhất
-        $unique_name = uniqid() . "_" . basename($original_name);
-
         if (!is_dir($upload_dir)) {
-            // Nếu thư mục không tồn tại, tạo thư mục
             mkdir($upload_dir, 0777, true);
         }
 
-        // Đường dẫn đích để lưu tệp
         $destination = $upload_dir . $original_name;
 
-        // Di chuyển tệp từ thư mục tạm thời vào thư mục đích
-        if (move_uploaded_file($tmp_name, $destination)) {
-            echo "<script>alert('File uploaded successfully.');";
-        } 
-        else {
-            echo "<script>alert('Error moving the uploaded file.');";
+        if (!move_uploaded_file($tmp_name, $destination)) {
+            header('Content-Type: application/json');
+            echo json_encode(["status" => "error", "message" => "Error moving the uploaded file."]);
+            exit;
         }
     } 
     else {
-        echo "<script>alert('No file uploaded or there was an error.');";
+        header('Content-Type: application/json');
+        echo json_encode(["status" => "error", "message" => "No file uploaded or there was an error."]);
+        exit;
     }
-
+    
+    // Add product
     $stmt = $conn->prepare("
         INSERT INTO PRODUCTS (name, description, price, image, category_id, quantity)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -80,27 +79,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price,
         $original_name,
         $category_id,
-        $quantity,
+        $quantity
     );
 
     if ($stmt->execute()) {
-        // echo "<script>alert('New job created');";
-        echo "<script>window.location.href='?page=dashboard';</script>";
+        header('Content-Type: application/json');
+        echo json_encode(["status" => "success"]);
+        exit;
     } 
     else {
-        echo "Error: " . $stmt->error;
+        header('Content-Type: application/json');
+        echo json_encode(["status" => "error", "message" => $stmt->error]);
+        exit;
     }
-
-    $stmt->close();
 }
 ?>
+
 
 <head>
     <meta charset= "UTF-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
     <title>Products Management</title>
-    <link rel = "stylesheet" href = "assets/css/style.css">
-    <link rel = "stylesheet" href = "assets/css/form.css">
+    <link rel = "stylesheet" href = "/minimuji/assets/css/style.css">
+    <link rel = "stylesheet" href = "/minimuji/assets/css/form.css">
 </head>
 
 <body>
@@ -111,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class='form'>
                 <h1>ADD NEW PRODUCT</h1>
                 <hr>
-                <form id="add-product" action="" method="POST" enctype="multipart/form-data">  
+                <form id="add-product" action="?page=add-product" method="POST" enctype="multipart/form-data">  
                     <!-- Name -->
                     <div class="form-group">
                         <label for="product-name">Product name*</label>
@@ -120,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Description -->
                     <div class="form-group">
                         <label for="description">Description*</label>
-                        <input type="text" id="description" name="description" placeholder="The compact couch can be used for both the living ..." required>
+                        <textarea id="description" name="description" rows="8" placeholder="The compact couch can be used for both the living..." required></textarea>
                     </div>
                     <!-- Price -->
                     <div class="form-group">
@@ -136,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div>
                         <label for="category">Category*</label>
                         <select class="filter-select" name="category">
-                            <option disabled hidden <?= !isset($_GET['category']) ? 'selected' : '' ?>>Furniture</option>
+                            <option value = "">Choose category</option>
                             <option value="Furniture" <?= ($_GET['category'] ?? '') == 'Furniture' ? 'selected' : '' ?>>Furniture</option>
                             <option value="Stationery" <?= ($_GET['category'] ?? '') == 'Stationery' ? 'selected' : '' ?>>Stationery</option>
                             <option value="Travelling items" <?= ($_GET['category'] ?? '') == 'Travelling items' ? 'selected' : '' ?>>Travelling items</option>
@@ -144,20 +145,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <!-- Upload image -->
                     <div class="upload-container">
+                        <label for="upload-image">Upload product image*</label>
                         <div class="upload-box">
                             <input type="file" id="image" name="image" accept=".png, .jpg">
                             <span> Upload product image</span>
                         </div>
-                        <p>Attach file. File type: .jpg, .png.</p>
-                    </div>
-                    <!-- Display image -->
-                    <div class="file-info" style="display: none;">
-                        <p><strong>Uploaded image:</strong></p>
-                        <div id="file"></div>
+                        <p>File type: .jpg, .png.</p>
                     </div>
                     <!-- Submit -->
                     <div class="form-group">
-                        <button type="submit" class="btn btn-dark">Send appilication</button>
+                        <button type="submit" class="btn-dark">Add Product</button>
                     </div>
                 </form>
             </div>
@@ -166,3 +163,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     <?php include 'src/components/footer.php';?>
 </body>
+
+<script src = "/minimuji/assets/js/add-product.js"></script>

@@ -1,114 +1,209 @@
 <?php 
 include 'config.php'; 
 
-// Get parameters GET from form
-$category = isset($_GET['category']) && $_GET['category'] !== "all" ? $_GET['category'] : null;
-$sort_price = isset($_GET['sort_price']) ? $_GET['sort_price'] : null; 
+// Kiểm tra AJAX request
+$is_ajax = isset($_GET['ajax']) && $_GET['ajax'] == 1;
 
+// Nhận tham số GET
+$category = isset($_GET['category']) ? str_replace('-', ' ', trim($_GET['category'])) : null;
+$sort_price = isset($_GET['sort_price']) ? trim($_GET['sort_price']) : null; 
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : null;
+
+// Pagination setup
 $limit = 5;
-$page = isset($_GET['pgn']) ? (int)$_GET['pgn'] : 1;
-$page = max($page, 1);
+$page = isset($_GET['pgn']) ? max(1, (int)$_GET['pgn']) : 1;
 $offset = ($page - 1) * $limit;
 
-// Category filtering
-$condition_clause = null;
+// Xây dựng WHERE
+$where_clauses = [];
+
 if ($category) {
-    $category_query = $conn->query("SELECT id FROM CATEGORY WHERE name = '$category'");
-    $category_row = $category_query->fetch_assoc();
-    $category_id = $category_row['id'];
-    $condition_clause = " WHERE category_id = '$category_id'";
+    $stmt = $conn->prepare("SELECT id FROM CATEGORY WHERE name = ?");
+    $stmt->bind_param("s", $category);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($row = $result->fetch_assoc()) {
+        $category_id = $row['id'];
+        $where_clauses[] = "category_id = " . (int)$category_id;
+    }
+    $stmt->close();
 }
 
-// Price sorting
-$sort_clause = null;
-if ($sort_price == 'asc') {
-    $sort_clause = " ORDER BY price ASC";
-} 
-elseif ($sort_price == 'desc') {
-    $sort_clause = " ORDER BY price DESC";
-} 
-else {
-    $sort_clause = " ORDER BY id ASC"; // Default sort by id
+if ($keyword) {
+    $keyword_safe = $conn->real_escape_string($keyword);
+    $where_clauses[] = "name LIKE '$keyword_safe%'";
 }
 
-// Get total pages
-$query = $conn->query("SELECT COUNT(*) as total FROM PRODUCTS $condition_clause");
-if ($query) {
-    $total_products = (int)$query->fetch_assoc()['total'];
-} 
-else {
-    $total_products = 0;
+// Kết hợp điều kiện
+$condition_clause = '';
+if (!empty($where_clauses)) {
+    $condition_clause = 'WHERE ' . implode(' AND ', $where_clauses);
 }
-$total_pages = ceil($total_products / $limit);
 
-// Get products
-$query = $conn->query("SELECT * FROM PRODUCTS $condition_clause $sort_clause LIMIT $limit OFFSET $offset");
+// ORDER BY
+switch ($sort_price) {
+    case 'asc':
+        $sort_clause = "ORDER BY price ASC";
+        break;
+    case 'desc':
+        $sort_clause = "ORDER BY price DESC";
+        break;
+    default:
+        $sort_clause = "ORDER BY id ASC";
+        break;
+}
+
+// Tổng số sản phẩm
+$total_products = 0;
+$total_query = $conn->query("SELECT COUNT(*) as total FROM PRODUCTS $condition_clause");
+if ($total_query) {
+    $total_products = (int)$total_query->fetch_assoc()['total'];
+}
+$total_pages = (int)ceil($total_products / $limit);
+
+// Lấy sản phẩm
 $products = [];
+$product_query = $conn->query("SELECT * FROM PRODUCTS $condition_clause $sort_clause LIMIT $limit OFFSET $offset");
+if ($product_query) {
+    while ($row = $product_query->fetch_assoc()) {
+        $products[] = $row;
+    }
+}
 
-while ($row = $query->fetch_assoc()) {
-    $products[] = $row;
+// Nếu là AJAX: chỉ trả tbody
+if ($is_ajax) {
+    if (!empty($products)) {
+        foreach ($products as $index => $row): ?>
+            <tr class="clickable-row" data-id="<?= $row['id'] ?>">
+                <td><?= $row['id'] ?></td>
+                <td>
+                    <?php if (!empty($row['image'])): ?>
+                        <img src="/minimuji/assets/images/products/<?= htmlspecialchars($row['image']) ?>" width="80">
+                    <?php else: ?>
+                        No image
+                    <?php endif; ?>
+                </td>
+                <td><?= htmlspecialchars($row['name']) ?></td>
+                <td><?= number_format($row['price']) ?>₫</td>
+                <td><?= (int)$row['quantity'] ?></td>
+                <td><?= (int)$row['sold'] ?></td>
+                <td>
+                    <?php
+                    $cat_query = $conn->query("SELECT name FROM CATEGORY WHERE id = " . (int)$row['category_id']);
+                    $cat_row = $cat_query->fetch_assoc();
+                    echo htmlspecialchars($cat_row['name'] ?? 'Unknown');
+                    ?>
+                </td>
+                <td>
+                    <button class = "white-button" onclick="window.location.href='/minimuji/edit-product/<?= $product['id'] ?>'">Edit</button>
+                    <button class = "red-button" onclick="deleteProduct(<?= $row['id'] ?>)">Delete</button>
+                </td>
+            </tr>
+    <?php endforeach;
+    } 
+    else {
+        echo '<tr><td colspan="8">No products found.</td></tr>';
+    }
+    exit;
 }
 ?>
+
 
 <head>
     <meta charset= "UTF-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
     <title>Products Management</title>
-    <link rel = "stylesheet" href = "assets/css/style.css">
-    <link rel = "stylesheet" href = "assets/css/products-admin.css">
+    <link rel = "stylesheet" href = "/minimuji/assets/css/style.css">
+    <link rel = "stylesheet" href = "/minimuji/assets/css/products-admin.css">
+    <link rel = "stylesheet" href = "/minimuji/assets/css/pagination.css">
 </head>
 
 <body>
     <?php include 'src/components/header.php';?>
     <main>
-        <button id="add-btn" onclick="window.location.href='?page=add-product'">Add new product</button>
-        <section class = "products">
-            <!-- Filter sidebar -->
-            <div class = "sidebar">
-                <form method = "GET" id = "filterForm">
+        <section class = "container">
+            <h1>Products Management</h1>
+            <!-- Filter bar + Add product -->
+            <div class = "filters">
+                <form method = "GET" id = "filterForm" action = "/minimuji/products-admin">
                     <?php foreach ($_GET as $key => $value): ?>
                         <?php if (!in_array($key, ['category', 'sort_price', 'pgn'])): ?>
                             <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($value) ?>">
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <!-- Category Filter -->
-                    <div class = "filter-item">
-                        <label for = "category">Category</label>
-                        <select name = "category" id = "category" onchange = "this.form.submit()">
-                            <option value = "">All Categories</option>
-                            <option value = "Furniture" <?= ($_GET['category'] ?? '')  == 'Furniture' ? 'selected' : '' ?>>Furniture</option>
-                            <option value = "Stationery" <?= ($_GET['category'] ?? '') == 'Stationery' ? 'selected' : '' ?>>Stationery</option>
-                            <option value = "Traveling items" <?= ($_GET['category'] ?? '') == 'Traveling items' ? 'selected' : '' ?>>Traveling items</option>
-                        </select>
-                    </div>
+                    <select name = "category" id = "category" onchange = "updateURL()">
+                        <option value = "">All Categories</option>
+                        <option value = "Furniture" <?= ($_GET['category'] ?? '')  == 'Furniture' ? 'selected' : '' ?>>Furniture</option>
+                        <option value = "Stationery" <?= ($_GET['category'] ?? '') == 'Stationery' ? 'selected' : '' ?>>Stationery</option>
+                        <option value = "Traveling items" <?= ($_GET['category'] ?? '') == 'Traveling items' ? 'selected' : '' ?>>Traveling items</option>
+                    </select>
                     <!-- Sort by Price -->
-                    <div class = "filter-item">
-                        <label for = "sort_price">Price (VND)</label>
-                        <select name = "sort_price" id= "sort_price" onchange= "this.form.submit()">
-                            <option value = "">Price</option>
-                            <option value = "asc" <?= ($_GET['sort_price'] ?? '') == 'asc' ? 'selected' : '' ?>>Low to High</option>
-                            <option value = "desc" <?= ($_GET['sort_price'] ?? '') == 'desc' ? 'selected' : '' ?>>High to Low</option>
-                        </select>
-                    </div>
+                    <select name = "sort_price" id= "sort_price" onchange= "updateURL()">
+                        <option value = "">Price</option>
+                        <option value = "asc" <?= ($_GET['sort_price'] ?? '') == 'asc' ? 'selected' : '' ?>>Low to High</option>
+                        <option value = "desc" <?= ($_GET['sort_price'] ?? '') == 'desc' ? 'selected' : '' ?>>High to Low</option>
+                    </select>
                 </form>
+                <button class = "red-button" onclick="window.location.href='/minimuji/add-product'">Add new product</button>
+            </div>
+
+            <!-- Search bar -->
+            <div class = "search-bar">
+                <input type="text" id="search" placeholder="Search products...">
             </div>
 
             <!-- Products list -->
-            <div class = "product-container">
-                <div class = "box-container">
-                    <?php foreach($products as $product): ?>
-                        <div class = "box">
-                            <button onclick="window.location.href='?page=view-product&id=<?=$product['id']?>'">
-                                <img src = "assets/images/products/<?=$product['image']?>" alt = "<?=$product['image']?>" class = "image">
-                                <h3 class = "name"><?=$product['name']?></h3> <br>
-                                <p class = "price"><?=number_format($product['price'], 0, ',', '.')?> VND</p>
-                            </button>
-                            <button class = "btn-white" onclick="window.location.href='?page=edit-product&product_id=<?=$product['id']?>'">Edit</button>
-                            <button class="btn" onclick="deleteProduct(<?= $product['id'] ?>)">Delete</button>
-                        </div>
-                    <?php endforeach ?>
-                </div>
-            </div>
+            <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Price (VND)</th>
+                    <th>Quantity</th>
+                    <th>Sold</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($products)): ?>
+                    <?php foreach ($products as $index => $row): ?>
+                        <tr class="clickable-row" data-id="<?= $row['id'] ?>">
+                            <td><?= $offset + $index + 1 ?></td>
+                            <td>
+                                <?php if (!empty($row['image'])): ?>
+                                    <img src="/minimuji/assets/images/products/<?= htmlspecialchars($row['image']) ?>" width="80">
+                                <?php else: ?>
+                                    No image
+                                <?php endif; ?>
+                            </td>
+                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td><?= number_format($row['price']) ?>₫</td>
+                            <td><?= (int)$row['quantity'] ?></td>
+                            <td><?= (int)$row['sold'] ?></td>
+                            <td>
+                                <?php
+                                $cat_query = $conn->query("SELECT name FROM CATEGORY WHERE id = " . (int)$row['category_id']);
+                                $cat_row = $cat_query->fetch_assoc();
+                                echo htmlspecialchars($cat_row['name'] ?? 'Unknown');
+                                ?>
+                            </td>
+                            <td>
+                                <button class = "white-button" onclick="window.location.href='/minimuji/edit-product/<?= $product['id'] ?>'">Edit</button>
+                                <button class = "red-button" onclick="deleteProduct(<?= $row['id'] ?>)">Delete</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="8">No products found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
 
         </section>
     </main>
@@ -120,5 +215,79 @@ while ($row = $query->fetch_assoc()) {
     <?php include 'src/components/footer.php';?>
 </body>
 
-<script src="assets/js/deleteProduct.js"></script>
+<script src="/minimuji/assets/js/delete-product.js"></script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search');
+    let timer = null;
+
+    function bindClickableRows() {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                if (id) {
+                    window.location.href = '/minimuji/view-product/' + id;
+                }
+            });
+        });
+        // Prevent row click when clicking on buttons inside the row
+        const buttons = document.querySelectorAll('.clickable-row button');
+        buttons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation(); // Stop the event from propagating to the row
+            });
+        });
+    }
+
+    bindClickableRows(); 
+
+    searchInput.addEventListener('keyup', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            const keyword = searchInput.value.trim();
+            const url = new URL(window.location.href);
+            url.searchParams.set('keyword', keyword);
+            url.searchParams.set('ajax', '1');
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector('tbody').innerHTML = html;
+                    bindClickableRows(); 
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }, 300);
+    });
+});
+
+</script>
+
+<script>
+    function updateURL() {
+        const category = document.getElementById('category').value.replace(/\s+/g, '-'); // Replace spaces with dashes
+        const sortPrice = document.getElementById('sort_price').value;
+
+        let url = '/minimuji/products-admin';
+
+        // Preserve the keyword parameter from the current URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('keyword')) {
+            const keyword = params.get('keyword');
+            url += `/keyword/${encodeURIComponent(keyword)}`;
+        }
+
+        if (category) {
+            url += `/category/${encodeURIComponent(category)}`;
+        }
+        if (sortPrice) {
+            url += `/sort_price/${encodeURIComponent(sortPrice)}`;
+        }
+
+        // Redirect to the new URL
+        window.location.href = url;
+    }
+</script>

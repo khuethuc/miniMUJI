@@ -58,12 +58,13 @@
 
 /* Buttons */
 .product-buttons {
+    margin: 10px 0;
     display: flex;
     gap: 10px;
 }
 
-.product-buttons .add-to-cart,
-.product-buttons .buy-now {
+.product-buttons .red-button,
+.product-buttons .white-button {
     padding: 10px 20px;
     font-size: 15px;
     border: none;
@@ -72,22 +73,22 @@
     transition: background-color 0.3s;
 }
 
-.product-buttons .add-to-cart {
+.product-buttons .red-button {
     background-color: #7F0019;
     color: white;
 }
 
-.product-buttons .add-to-cart:hover {
+.product-buttons .red-button:hover {
     background-color: #B03A3A;
 }
 
-.product-buttons .buy-now {
+.product-buttons .white-button {
     background-color: white;
     color: #7F0019;
     border: solid #7F0019;
 }
 
-.product-buttons .buy-now:hover {
+.product-buttons .white-button:hover {
     background-color: rgb(229, 227, 227);
 }
 

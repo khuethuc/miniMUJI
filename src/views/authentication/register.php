@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         if ($stmt->execute()) {
-            echo "<script>alert('Registration successful!'); window.location.href = '?page=login';</script>";
+            echo "<script>alert('Registration successful!'); window.location.href = '/minimuji/login';</script>";
             exit;
         } 
         else {
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class = 'form'>
             <h1>Register</h1>
 
-            <p>Already have an account? <a href="?page=login" class="text-decoration-underline text-black">Login</a></p>
+            <p>Already have an account? <a href="/minimuji/login" class="text-decoration-underline text-black">Login</a></p>
 
             <form method = "POST" id = "form">
                 <!-- Full Name -->
@@ -116,3 +116,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php include 'src/components/footer.php';?> 
 </body>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('form');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    const terms = document.getElementById('terms');
+
+    // Regex pattern to check for at least 6 chars, 1 number, 1 letter, 1 special char
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/;
+
+    form.addEventListener('submit', function (e) {
+        // Clear previous errors
+        email.setCustomValidity('');
+        password.setCustomValidity('');
+        confirmPassword.setCustomValidity('');
+        terms.setCustomValidity('');
+
+        // Email validation
+        if (!email.value.includes('@') || !email.value.includes('.')) {
+            email.setCustomValidity('Please enter a valid email address.');
+        }
+
+        // Password validation
+        if (!passwordPattern.test(password.value)) {
+            password.setCustomValidity(
+                'Password must be at least 6 characters and include a letter, a number, and a special character.'
+            );
+        }
+
+        // Confirm password validation
+        if (password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity('Passwords do not match.');
+        }
+
+        // Terms agreement validation
+        if (!terms.checked) {
+            terms.setCustomValidity('You must agree to the terms.');
+        }
+
+        // If the form is invalid, prevent submission and show errors
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            form.reportValidity();
+        }
+    });
+
+    // Clear validation errors on input
+    [email, password, confirmPassword].forEach(input => {
+        input.addEventListener('input', () => {
+            input.setCustomValidity('');
+        });
+    });
+
+    terms.addEventListener('change', () => {
+        terms.setCustomValidity('');
+    });
+});
+</script>

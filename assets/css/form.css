@@ -27,6 +27,7 @@
     display: block;
     width: 100%;
     margin: 15px 0px;
+    font-size: 15px;
 }
 
 .form h1 {
@@ -43,7 +44,8 @@
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group input[type="email"],
-.form-group input[type="password"]{
+.form-group input[type="password"],
+.form-group input[type="tel"]{
     height: 40px;
     border-radius: 8px;
     border: 1.5px solid #000;
@@ -66,17 +68,10 @@
     margin: 0 auto;
     padding: 10px;
     font-size: 15px;
-}
-
-.form-group button.btn-light {
-    border: 2px solid #000;
-    max-width: 250px;
-    min-width: 100px;
-    width: 50%;
-    border-radius: 8px;
-    font-weight: bold;
-    padding: 10px;
-    font-size: 15px;
+    background-color: #7F0019;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 .form-group input[type = "submit"]{
@@ -129,7 +124,7 @@ input[type="file"] {
     padding: 5px 15px !important;
     font-weight: 500;
     border-radius: 6px;
-    border: 2px solid #000 !important;
+    border: 1.5px solid #000 !important;
     background-color: #fff; 
     outline: none;
     width: 200px;
@@ -157,15 +152,6 @@ input[type="file"] {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-}
-
-.download-btn {
-    height: 30px;
-    width: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 20px !important;
 }
 
 .login-type {
@@ -210,8 +196,10 @@ input[type="file"] {
 .form-group textarea {
     width: 100%;
     border-radius: 8px;
-    border: 1px solid #000;
+    border: 1.5px solid #000;
     padding: 10px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 15px;
 }
 
 .form-group.setting {

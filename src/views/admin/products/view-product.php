@@ -18,10 +18,8 @@ if (!$product) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/products.css">
-    
-    <?php include "./products.php"?>
+    <link rel="stylesheet" href="/minimuji/assets/css/style.css">
+    <link rel="stylesheet" href="/minimuji/assets/css/products-detail.css">
 </head>
 <body>
     <!-- Header -->
@@ -29,27 +27,23 @@ if (!$product) {
 
     <main>
         <section class="product-details">
-            <div class="container">
-                <div class="product-left">
-                    <img src="assets/images/products/<?= $product['image']?>" alt="<?= $product['name'] ?>" class="product-image">
+            <div class="product-left">
+                <img src="/minimuji/assets/images/products/<?= $product['image']?>" alt="<?= $product['name'] ?>" class="product-image">
+            </div>
+            <div class = "product-right">
+                <h1 class="product-name"><?= $product['name'] ?></h1>
+                <div class = "short-info">
+                    <p>Product ID: <?= $product['id'] ?></p>
+                    <p>Sold: <?= $product['sold'] ?></p>
+                    <p>In stock: <?= $product['quantity'] ?></p>
                 </div>
-                <div class = "product-right">
-                    <form action = "" method = "POST" class = "product-right">
-                        <h1 class="product-name"><?= $product['name'] ?></h1>
-                        <p>Product ID: <?= $product['id'] ?></p>
-                        <p>Sold: <?= $product['sold'] ?></p>
-                        <p>In stock: <?= $product['quantity'] ?></p>
-                        <p class="product-price"><?= number_format($product['price'], 0, ',', '.') ?> VND</p>
-                        <p class = "product-description"><strong>Description:</strong> <?= $product['description'] ?></p>
-                        <div class = "quantity-container">
-                            <label for = "quantity">Quantity:</label>
-                            <input type = "number" id = "quantity" name = "quantity" min = "1" max = "<?= $product['quantity'] ?>" value = "1" class = "quantity-input">
-                        </div>
-                    </form>
-                    <button class = "button-red" onclick="deleteProduct(<?= $product['id'] ?>)">Delete</button>
-                    <button class = "button-white" onclick="window.location.href='?page=edit-product&product_id=<?=$product['id']?>'">Edit</button>
-                    
+                <p class="product-price"><?= number_format($product['price'], 0, ',', '.') ?> VND</p>
+                <p>Description: <?= $product['description'] ?></p>
+                <div class = "product-buttons">
+                    <button class = "white-button" onclick="window.location.href='/minimuji/edit-product/<?= $product['id'] ?>'">Edit</button>
+                    <button class = "red-button" onclick="deleteProduct(<?= $product['id'] ?>)">Delete</button>
                 </div>
+                
             </div>
         </section>
         
@@ -60,4 +54,4 @@ if (!$product) {
 </body>
 </html>
 
-<script src="assets/js/deleteProduct.js"></script>
+<script src="/minimuji/assets/js/delete-product.js"></script>

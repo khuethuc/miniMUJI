@@ -15,6 +15,16 @@ body, html {
     padding: 0;
 }
 
+.container{
+    margin: 0 10vh 10vh 10vh;
+}
+
+h1 {
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #7F0019;
+}
 /* Background image */
 
 .background {
@@ -22,6 +32,7 @@ body, html {
     height: 400px;
     overflow: hidden;
     justify-content: center;
+    margin: 0 0 5vh 0;
 }
 
 .background-image {
@@ -33,28 +44,15 @@ body, html {
 }
 
 /* Product display */
-
-.products {
-    margin: 0vh 15vh;
-    padding-top: 60px;
-}
-
-.products .product-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-.products .product-container .box-container {
+.product-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 cột cho các sản phẩm */
-    gap: 30px;
-    width: 90%;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    align-items: flex-start;
+    margin: 0 0 5vh 0; 
 }
 
-.products .product-container .box-container .box {
+.box {
     background-color: white;
     border-radius: 10px;
     padding: 10px;
@@ -68,57 +66,54 @@ body, html {
     border: solid #dcdbdb;
 }
 
-.products .box-container .box .image {
-    width: 100%;
-    height: 300px;
+.box .image {
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 5px;
 }
 
-.products .box-container .box .name {
+.box .name {
     font-size: 15px;
     height: 2.6rem;
     color: black;
-    margin: 10px 0;
     font-weight: bold;
+    margin: 10px 0;
 }
 
-.products .box-container .box .price {
+.box .price {
     font-size: 15px;
     font-weight: bold;
     color: #7F0019;
     margin-top: 5px;
 }
 
-.products .box-container .box .btn {
-    width: 100%;
-    padding: 10px;
-    background-color: #7F0019;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+.box .sold {
+    font-size: 15px;
+    color: black;
+    margin-top: 5px;
 }
 
-.products .box-container .box .btn-white {
-    width: 100%;
-    padding: 10px;
-    background-color: white;
-    color: #7F0019;
+.box:hover {
     border: solid #7F0019;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+}
+
+.box button{
+    border: none;
+    background-color: white;
+}
+
+.box h3 {
     font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1.5;
 }
 
-.products .box-container .box:hover {
-    border: solid #7F0019;
-}
-
-.products .box-container .box button{
-    border: none;
-    background-color: white;
+.box .info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
 }
 

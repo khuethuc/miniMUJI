@@ -17,7 +17,7 @@ if (!$product) {
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['role'])) {
-        echo '<script>window.location.href="?page=login"</script>';
+        echo '<script>window.location.href="/minimuji/login"</script>';
     }
     else {
         // Get product from form
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
         // Check valid quantity
         if ($product['quantity'] < $product_quantity) {
-            echo "<script>alert('Add to cart failed: Not enough stock available.'); window.location.href = '?page=product-details&id={$product['id']}';</script>";
+            echo "<script>alert('Add to cart failed: Not enough stock available.'); window.location.href = \"/minimuji/product-details/{$product['id']}\";</script>";
             exit;
         }
         else {
@@ -39,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $query = mysqli_fetch_assoc($check_cart_query);
                 $temp_quantity = $query['quantity'] + $product_quantity;
                 if ($product['quantity'] < $temp_quantity){
-                    echo "<script>alert('Add to cart failed: Not enough stock available.'); window.location.href = '?page=product-details&id={$product['id']}';</script>";
+                    echo "<script>alert('Add to cart failed: Not enough stock available.'); window.location.href = \"/minimuji/product-details/{$product['id']}\";</script>";
                     exit;
                 }
                 $cart_query = mysqli_query($conn, "SELECT id FROM CARTS WHERE user_id = '$user_id' AND status = 'Unfinished'") or die('query failed');
                 $cart_data = mysqli_fetch_assoc($cart_query);
                 $cart_id = $cart_data['id'];
-                mysqli_query($conn, "UPDATE CART_PRODUCTS SET quantity = quantity + '$product_quantity' WHERE products_id = '$product_id' AND cart_id = (SELECT id FROM CARTS WHERE user_id = '$user_id' AND status = 'Unfinished')") or die('query failed');
+                mysqli_query($conn, "UPDATE CART_PRODUCTS SET quantity = quantity + $product_quantity WHERE products_id = '$product_id' AND cart_id = (SELECT id FROM CARTS WHERE user_id = '$user_id' AND status = 'Unfinished')") or die('query failed');
                 $new_product_total = $product['price'] * $product_quantity;
                 mysqli_query($conn, "UPDATE CARTS SET price = price + $new_product_total WHERE id = '$cart_id'") or die('query failed');
             } 
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     if (empty($errors)) {
-        echo "<script>alert('Add to cart successful!'); window.location.href = '?page=products';</script>";
+        echo "<script>alert('Add to cart successful!'); window.location.href = '/minimuji/products';</script>";
     } 
 }
 ?>
@@ -79,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/products-detail.css">
+    <link rel="stylesheet" href="/minimuji/assets/css/style.css">
+    <link rel="stylesheet" href="/minimuji/assets/css/products-detail.css">
 </head>
 <body>
     <!-- Header -->
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main>
         <section class="product-details">
             <div class="product-left">
-                <img src="assets/images/products/<?= $product['image']?>" alt="<?= $product['name'] ?>" class="product-image">
+                <img src="/minimuji/assets/images/products/<?= $product['image']?>" alt="<?= $product['name'] ?>" class="product-image">
             </div>
             <div class = "product-right">
                 <h1 class="product-name"><?= $product['name'] ?></h1>
@@ -100,13 +100,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <p class="product-price"><?= number_format($product['price'], 0, ',', '.') ?> VND</p>
                 <p>Description: <?= $product['description'] ?></p>
-                <div class = "quantity-container">
-                    <label for = "quantity">Quantity:</label>
-                    <input type = "number" id = "quantity" name = "quantity" min = "1" max = "<?= $product['quantity'] ?>" value = "1" class = "quantity-input">
-                </div>
                 <form action = "#" method = "POST" class = "product-right">
+                    <div class = "quantity-container">
+                        <label for = "quantity">Quantity:</label>
+                        <input type = "number" id = "quantity" name = "quantity" min = "1" max = "<?= $product['quantity'] ?>" value = "1" class = "quantity-input">
+                    </div>
                     <div class="product-buttons">
-                        <button type = "submit" class = "add-to-cart">Add to Cart</button>
+                        <button type = "submit" class = "red-button">Add to Cart</button>
                     </div>
                 </form>
             </div>

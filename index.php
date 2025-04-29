@@ -2,10 +2,9 @@
 session_start();
 include 'config.php';
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] == 'user'){
+if (!isset($_SESSION['role'])){
     $page = isset($_GET['page']) ? $_GET['page'] : 'home';
     switch ($page) {
-        /* Guest and Customer */
         case 'home':
             include "src/views/user/home/home.php";
             break;
@@ -24,21 +23,44 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] == 'user'){
         case 'register':
             include "src/views/authentication/register.php";
             break;
-        /* Customer */
+        default:
+            echo "Page not found.";
+            break;  
+    } 
+}
+
+else if (isset($_SESSION['role']) && $_SESSION['role'] == 'user'){
+    $page = isset($_GET['page']) ? $_GET['page'] : 'home';
+    switch ($page){
+        case 'home':
+            include "src/views/user/home/home.php";
+            break;
+        case 'products':
+            include "src/views/user/products/products.php";
+            break;
+        case 'product-details':
+            include "src/views/user/products/product-details.php";
+            break;
+        case 'contact':
+            include "src/views/user/contact/contact.php";
+            break;
         case 'logout':
             include "src/views/authentication/logout.php";
             break;
         case 'cart':
             include "src/views/user/carts/cart.php";
             break;
+        case 'check-out':
+            include "src/views/user/orders/check-out.php";
+            break;
         default:
             echo "Page not found.";
             break;
     }
-        
 }
+
 else{
-    $page = isset($_GET['page']) ? $_GET['page'] : 'home';
+    $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
     switch ($page) {
         case 'dashboard':
             include "src/views/admin/dashboard/dashboard.php";

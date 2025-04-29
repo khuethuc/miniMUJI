@@ -1,0 +1,60 @@
+# Enable mod_rewrite
+RewriteEngine On
+
+# Ensure the base directory is set correctly
+RewriteBase /minimuji/
+
+# Redirect requests for non-existent files or directories to index.php with a page parameter
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{QUERY_STRING} !page= [NC]  # Only apply if 'page' is not already in the query string
+RewriteRule ^([a-zA-Z0-9-]+)$ index.php?page=$1 [QSA,L]
+
+# Specific routes for user-related pages
+RewriteRule ^login$ index.php?page=login [QSA,L]
+RewriteRule ^register$ index.php?page=register [QSA,L]
+RewriteRule ^logout$ index.php?page=logout [QSA,L]
+
+# Admin panel routes
+RewriteRule ^dashboard$ index.php?page=dashboard [QSA,L]
+RewriteRule ^products-admin$ index.php?page=products-admin [QSA,L]
+RewriteRule ^products-admin(/category/([^/]+))?(/sort_price/([^/]+))?(/page/([0-9]+))?$ index.php?page=products-admin&category=$2&sort_price=$4&pgn=$6 [QSA,L]
+RewriteRule ^add-product$ index.php?page=add-product [QSA,L]
+RewriteRule ^edit-product/([0-9]+)$ index.php?page=edit-product&product_id=$1 [QSA,L]
+RewriteRule ^delete-product/([0-9]+)$ index.php?page=delete-product&product_id=$1 [QSA,L]
+RewriteRule ^view-product/([0-9]+)$ index.php?page=view-product&id=$1 [QSA,L]
+
+# Public-facing pages
+RewriteRule ^contact$ index.php?page=contact [QSA,L]
+RewriteRule ^products$ index.php?page=products [QSA,L]
+RewriteRule ^products/keyword/([^/]+)$ index.php?page=products&keyword=$1 [QSA,L]
+RewriteRule ^products(/category/([^/]+))?(/sort_price/([^/]+))?(/page/([0-9]+))?$ index.php?page=products&category=$2&sort_price=$4&pgn=$6 [QSA,L]
+RewriteRule ^cart$ index.php?page=cart [QSA,L]
+RewriteRule ^check-out$ index.php?page=check-out [QSA,L]
+RewriteRule ^cart/([0-9]+)$ index.php?page=cart&user_id=$1 [QSA,L]
+RewriteRule ^check-out/([0-9]+)$ index.php?page=check-out&cart_id=$1 [QSA,L]
+RewriteRule ^product-details/([0-9]+)$ index.php?page=product-details&id=$1 [QSA,L]
+
+# Handle 404 errors with a custom error page
+ErrorDocument 404 /404.html
+
+# Security: Disable directory listing
+Options -Indexes
+
+# Security: Prevent access to .htaccess itself
+<Files .htaccess>
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Caching: Enable browser caching for static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType text/html "access plus 1 day"
+</IfModule>

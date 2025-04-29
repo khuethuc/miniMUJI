@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th4 21, 2025 lúc 07:50 AM
+-- Thời gian đã tạo: Th4 29, 2025 lúc 12:03 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -40,7 +40,10 @@ CREATE TABLE `CARTS` (
 --
 
 INSERT INTO `CARTS` (`id`, `user_id`, `num_of_products`, `price`, `status`) VALUES
-(1, 1, 2, 1621222, 'Unfinished');
+(2, 1, 3, 5993000, 'Finished'),
+(3, 1, 2, 479000, 'Unfinished'),
+(4, 3, 3, 887000, 'Finished'),
+(5, 3, 1, 1963000, 'Finished');
 
 -- --------------------------------------------------------
 
@@ -59,7 +62,15 @@ CREATE TABLE `CART_PRODUCTS` (
 --
 
 INSERT INTO `CART_PRODUCTS` (`cart_id`, `products_id`, `quantity`) VALUES
-(1, 5, 1);
+(2, 1, 2),
+(2, 4, 1),
+(2, 6, 3),
+(3, 1, 1),
+(3, 6, 1),
+(4, 5, 1),
+(4, 8, 3),
+(4, 9, 1),
+(5, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -94,8 +105,18 @@ CREATE TABLE `ORDERS` (
   `receiver_name` varchar(100) NOT NULL,
   `address` text NOT NULL,
   `status` enum('Waiting','Packing','Delivery','Finished') NOT NULL DEFAULT 'Waiting',
-  `price` int(11) NOT NULL
+  `price` int(11) NOT NULL,
+  `phone_number` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `ORDERS`
+--
+
+INSERT INTO `ORDERS` (`id`, `user_id`, `cart_id`, `receiver_name`, `address`, `status`, `price`, `phone_number`) VALUES
+(1, 1, 2, 'Thuc Khue', '268 Ly Thuong Kiet, 14, Ho Chi Minh City', 'Waiting', 5993000, '0123456789'),
+(2, 3, 4, 'Nguyen Thi A', '72 Le Thanh Ton, Ben Nghe, Ho Chi Minh', 'Waiting', 887000, '0123456789'),
+(3, 3, 5, 'Trinh Tran Phuong Tuan', '200 Ly Thuong Kiet, 14, Ho Chi Minh', 'Waiting', 1963000, '0627384919');
 
 -- --------------------------------------------------------
 
@@ -119,23 +140,22 @@ CREATE TABLE `PRODUCTS` (
 --
 
 INSERT INTO `PRODUCTS` (`id`, `name`, `description`, `price`, `image`, `category_id`, `quantity`, `sold`) VALUES
-(1, 'Fabric Storage Box Thin', '35x37x16cm', 343000, 'C01001.jpg', 1, 100, 0),
-(2, 'Wooden Dining Bench', 'The compact couch can be used for both the living room and dining room.', 2936000, 'C01002.jpg', 1, 50, 0),
-(3, 'Pine - Folding Table', 'Pine wood retains the shape of the button, the more it is used, the more aesthetically rich it becomes. Easy to assemble and fold, you can take it out when needed and store it neatly when not in use.', 1963000, 'C01003.jpg', 1, 200, 0),
-(4, 'Wooden Chest 4 Drawers', 'The product is made from natural rubber wood. The product is highly applicable, suitable for every bedroom space.', 4899000, 'C01004.jpg', 1, 80, 0),
-(5, 'Fregrance Candle', 'Fragile items made of glass, ceramics, and mica', 399000, 'C01005.jpg', 1, 150, 0),
-(6, 'Nylon Mesh Pen Case With Gusset', 'Made of lightweight and durable mesh material, allowing easy management and visibility of the contents.', 136000, 'C02001.jpg', 2, 500, 0),
-(7, 'Always-on Laptop Case', 'Size A4, approximately 340×255×40mm', 637000, 'C02002.jpg', 2, 300, 0),
-(8, 'Highlighter', 'Blue highlighter.', 150000, 'C02003.jpg', 2, 1000, 0),
-(9, 'Stainless Steel Left-handed Scissors', 'These are compact, left-handed scissors designed for easy portability and come with a cap for safe storage.', 38000, 'C02004.jpg', 2, 250, 0),
-(10, 'Paper - Notebook - 7mm', 'The product has had unnecessary processing and decoration removed. With a simple plain cover and paper size with no distinction between top, bottom, left and right, so you can freely use it as you like..', 38000, 'C02005.jpg', 2, 500, 0),
-(11, 'Nylon Pouch Book', 'This is a convenient pouch for organizing small makeup items. It has a book-style design that can be opened.', 274000, 'C03001.jpg', 3, 100, 0),
-(12, 'Freely Adjustable Handle Hard Shell Suitcase (75L)', 'The carrying case has a blocking function that allows you to freely adjust the height of the carrying bar. It uses two-wheeled wheels that run smoothly and are easy to use, and use TS (TSA) locks for keys. Recycled materials are used for the interior.', 5890000, 'C03002.jpg', 3, 20, 0),
-(13, 'Nylon Pouch with handle', 'Approx. 20.5*10.5*12.5 cm.', 264000, 'C03003.jpg', 3, 500, 0),
-(14, 'PET Refill bottle Foam type', 'This is the type of bottle used to create foam, clear 400ml.', 97000, 'C03004.jpg', 3, 200, 0),
-(15, 'PET Petit Spray Bottle', 'This is a convenient bottle for portioning out lotions and other liquids. Please press it empty several times until the contents come out. Heat resistant: 60°C, cold resistant: -20°C. Capacity: 50ml.', 68000, 'C03005.jpg', 3, 300, 0),
-(17, 'fwf', 'hhhh', 800, 'Ảnh màn hình 2025-04-21 lúc 09.28.49.png', 2, 123, 0),
-(18, 'ừergr', 'ưgrg', 233, 'Ảnh màn hình 2025-04-21 lúc 09.33.15.png', 2, 23, 0);
+(1, 'Fabric Storage Box Thin', '35x37x16cm', 343000, 'C01001.jpg', 1, 98, 30),
+(2, 'Wooden Dining Bench', 'The compact couch can be used for both the living room and dining room.', 2936000, 'wooden_bench_dining.png', 1, 50, 121),
+(3, 'Pine - Folding Table', 'Pine wood retains the shape of the button, the more it is used, the more aesthetically rich it becomes. Easy to assemble and fold, you can take it out when needed and store it neatly when not in use.', 1963000, 'C01003.jpg', 1, 199, 12),
+(4, 'Wooden Chest 4 Drawers', 'The product is made from natural rubber wood. The product is highly applicable, suitable for every bedroom space.', 4899000, 'C01004.jpg', 1, 79, 77),
+(5, 'Fregrance Candle', 'Fragile items made of glass, ceramics, and mica', 399000, 'C01005.jpg', 1, 149, 35),
+(6, 'Nylon Mesh Pen Case With Gusset', 'Made of lightweight and durable mesh material, allowing easy management and visibility of the contents.', 136000, 'C02001.jpg', 2, 497, 20),
+(7, 'Always-on Laptop Case', 'Size A4, approximately 340×255×40mm', 637000, 'C02002.jpg', 2, 300, 36),
+(8, 'Highlighter', 'Blue highlighter.', 150000, 'C02003.jpg', 2, 997, 79),
+(9, 'Stainless Steel Left-handed Scissors', 'These are compact, left-handed scissors designed for easy portability and come with a cap for safe storage.', 38000, 'C02004.jpg', 2, 249, 98),
+(10, 'Paper - Notebook - 7mm', 'The product has had unnecessary processing and decoration removed. With a simple plain cover and paper size with no distinction between top, bottom, left and right, so you can freely use it as you like..', 38000, 'C02005.jpg', 2, 500, 29),
+(11, 'Nylon Pouch Book', 'This is a convenient pouch for organizing small makeup items. It has a book-style design that can be opened.', 274000, 'C03001.jpg', 3, 100, 45),
+(12, 'Freely Adjustable Handle Hard Shell Suitcase (75L)', 'The carrying case has a blocking function that allows you to freely adjust the height of the carrying bar. It uses two-wheeled wheels that run smoothly and are easy to use, and use TS (TSA) locks for keys. Recycled materials are used for the interior.', 5890000, 'C03002.jpg', 3, 20, 67),
+(13, 'Nylon Pouch with handle', 'Approx. 20.5*10.5*12.5 cm.', 264000, 'C03003.jpg', 3, 500, 88),
+(14, 'PET Refill bottle Foam type', 'This is the type of bottle used to create foam, clear 400ml.', 97000, 'C03004.jpg', 3, 200, 152),
+(15, 'PET Petit Spray Bottle', 'This is a convenient bottle for portioning out lotions and other liquids. Please press it empty several times until the contents come out. Heat resistant: 60°C, cold resistant: -20°C. Capacity: 50ml.', 68000, 'C03005.jpg', 1, 300, 6),
+(40, 'PP File Partition Type', 'Finished without using any pigments, this semi-transparent type allows easy visibility of contents and features an accordion-style interior for easy organization.', 146000, 'file-partition.png', 2, 49, 0);
 
 -- --------------------------------------------------------
 
@@ -157,7 +177,8 @@ CREATE TABLE `USERS` (
 
 INSERT INTO `USERS` (`id`, `full_name`, `hash_password`, `email`, `role`) VALUES
 (1, 'Thuc Khue', '9712fcb48082d4c5b186b95831111afff01c5ecbe8f403ae7b9270d82e11b4aa', 'thuckhue@gmail.com', 'user'),
-(2, 'Admin 1', '8d95192faa9fb16da0b722aa37e3da57db26499e2290a413969288628d2f1ebc', 'admin1@gmail.com', 'admin');
+(2, 'Admin 1', '8d95192faa9fb16da0b722aa37e3da57db26499e2290a413969288628d2f1ebc', 'admin1@gmail.com', 'admin'),
+(3, 'Nguyen Thi A', '3538b3aee447215b5cb724430fbad88fa78e2b4e1e61ae4d7371e7199c4922be', 'anguyen@gmail.com', 'user');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -212,7 +233,7 @@ ALTER TABLE `USERS`
 -- AUTO_INCREMENT cho bảng `CARTS`
 --
 ALTER TABLE `CARTS`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `CATEGORY`
@@ -224,19 +245,19 @@ ALTER TABLE `CATEGORY`
 -- AUTO_INCREMENT cho bảng `ORDERS`
 --
 ALTER TABLE `ORDERS`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `PRODUCTS`
 --
 ALTER TABLE `PRODUCTS`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT cho bảng `USERS`
 --
 ALTER TABLE `USERS`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

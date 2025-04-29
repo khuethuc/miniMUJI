@@ -1,0 +1,145 @@
+.cart-page {
+    margin: 10vh 15vh;
+}
+
+.cart-page h1 {
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* * * Main Flexbox * * */
+.cart-content {
+    display: flex;
+    gap: 30px;
+}
+
+/* * * Cart Items * * */
+.cart-items {
+    flex: 2;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* * * Single Cart Item * * */
+.cart-item {
+    display: flex;
+    align-items: flex-start;
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item img {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-info h2 {
+    font-size: 20px;
+    margin: 0 0 10px;
+}
+
+.cart-item-info p {
+    margin: 5px 0;
+    color: #333;
+}
+
+/* ==== Quantity Control ==== */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.quantity-control button {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    background: #fff;
+    border: 1px solid #999;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.quantity-control input[type="number"] {
+    width: 40px;
+    text-align: center;
+    margin: 0 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* ==== Item Subtotal ==== */
+.item-subtotal {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* ==== Order Summary ==== */
+.order-summary {
+    flex: 1;
+    background: #f3f3f3;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    height: 300px;
+}
+
+.order-summary h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.order-summary p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.order-summary strong {
+    color: #333;
+}
+
+/* ==== Checkout Button ==== */
+#checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background: #333;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+#checkout-btn:hover {
+    background: #555;
+}
+
+/* ==== Continue Shopping ==== */
+.order-summary a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #333;
+    text-decoration: underline;
+    font-size: 16px;
+}
+
+.order-summary a:hover {
+    color: #000;
+}
