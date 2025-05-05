@@ -33,11 +33,11 @@ function renderPageBtn($i, $current_page) {
 }
 
 function renderPagination($total_pages) {
-    // Get the current page number from the URL
-    $page = 1; // Default to page 1
-    if (isset($_GET['pgn']) && is_numeric($_GET['pgn'])) {
-        $page = (int)$_GET['pgn'];
-    }
+    $page = isset($_GET['pgn']) ? (int)$_GET['pgn'] : 1;
+    $display_page = ceil($total_pages / 3);
+    $step = ceil(($display_page - 1) / 2);
+    $start = max(2, $page - $step);
+    $end = min($total_pages - 1, $page + $step);
 
     echo '<div class="pagination">';
 
@@ -58,17 +58,19 @@ function renderPagination($total_pages) {
     else {
         // Always display page 1
         echo renderPageBtn(1, $page);
-
-        if ($page > 5) {
+        
+        // Display dots
+        if (($start - 1) > 1) {
             echo '<button class="pgn-button dots" disabled>...</button>';
         }
 
-        // Display 5 nearest pages 
-        for ($i = max(2, $page - 2); $i <= min($total_pages - 1, $page + 2); $i++) {
+        // Display step nearest pages 
+        for ($i = $start; $i <= $end; $i++) {
             echo renderPageBtn($i, $page);
         }
-
-        if ($page < $total_pages - 4) {
+        
+        // Display dots
+        if (($total_pages - $end) > 1) {
             echo '<button class="pgn-button dots" disabled>...</button>';
         }
 

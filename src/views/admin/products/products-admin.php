@@ -96,7 +96,7 @@ if ($is_ajax) {
                     ?>
                 </td>
                 <td>
-                    <button class = "white-button" onclick="window.location.href='/minimuji/edit-product/<?= $product['id'] ?>'">Edit</button>
+                    <button class = "white-button" onclick="window.location.href='/minimuji/edit-product/<?= $row['id'] ?>'">Edit</button>
                     <button class = "red-button" onclick="deleteProduct(<?= $row['id'] ?>)">Delete</button>
                 </td>
             </tr>
@@ -192,7 +192,7 @@ if ($is_ajax) {
                                 ?>
                             </td>
                             <td>
-                                <button class = "white-button" onclick="window.location.href='/minimuji/edit-product/<?= $product['id'] ?>'">Edit</button>
+                                <button class = "white-button" onclick="window.location.href='/minimuji/edit-product/<?= $row['id'] ?>'">Edit</button>
                                 <button class = "red-button" onclick="deleteProduct(<?= $row['id'] ?>)">Delete</button>
                             </td>
                         </tr>
